@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.css'
+import CardList from './components/CardList'
+import Search from './components/Search'
+import { useEffect, useState } from 'react'
 
 function App() {
+  const [robots, setRobots] = useState([])
+  const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then((response) => response.json())
+      .then((data) => setRobots(data))
+  }, [])
+
+  // search filters robots
+  const filteredRobots = robots.filter((robot) => {
+    console.log(robot.name)
+    return robot.name.toLowerCase().includes(search.toLowerCase())
+  })
+
+  console.log(filteredRobots)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Search setSearch={setSearch} />
+      {search}
+      <CardList robots={filteredRobots} />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
